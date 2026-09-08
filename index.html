@@ -68,14 +68,12 @@
 <nav class="nav" id="nav" aria-label="Main">
   <div class="nav-backdrop"></div>
   <div class="wrap nav__inner">
-    <!-- The lockup is drawn rather than loaded: the live site's image host
-         refuses cross-origin requests, so an <img> to it breaks here. -->
-    <a class="logo" href="/" aria-label="ImageWorks Creative — home">
-      <span class="logo__disc" aria-hidden="true">IW</span>
-      <span class="logo__word" aria-hidden="true">
-        <b>ImageWorks</b>
-        <span>Creative</span>
-      </span>
+    <!-- Served from this repo rather than hotlinked: the live site sits behind
+         a Cloudflare challenge that refuses direct image requests. The file is
+         the brand's own mark, taken from imageworksc/imageworks-home. -->
+    <a class="logo" href="https://www.imageworkscreative.com/">
+      <img src="assets/logo.png" width="158" height="40"
+           alt="ImageWorks Creative" loading="eager" decoding="async">
     </a>
 
     <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">

@@ -215,45 +215,18 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   height: var(--nav-h);
 }
 
-/* The signature lockup, set the way the branding page sets it: the mark on its
-   gradient disc, the name in navy, the descriptor tracked out in green. */
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
   flex: none;
   border-radius: var(--r);
   text-decoration: none;
 }
-.logo__disc {
-  display: grid;
-  place-items: center;
-  inline-size: 42px;
-  block-size: 42px;
-  flex: none;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--blue), var(--navy));
-  box-shadow: 0 6px 16px rgba(20, 60, 102, .24);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: .5px;
-}
-.logo__word { display: flex; flex-direction: column; gap: 4px; }
-.logo__word b {
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -.025em;
-  line-height: 1;
-  color: var(--navy);
-}
-.logo__word span {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--green-ink);
+/* Height-driven: the mark is 317×80, and the width follows so it can never be
+   squashed. The home page sets it at 34px; the taller bar here carries 40. */
+.logo img {
+  block-size: 40px;
+  inline-size: auto;
 }
 
 .menu {
@@ -551,6 +524,8 @@ body.show-status .wf-progress {
    -------------------------------------------------------------------------- */
 @media (max-width: 1000px) {
   :root { --nav-h: 72px; }
+
+  .logo img { block-size: 34px; }
 
   .hamburger { display: flex; }
 
