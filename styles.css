@@ -1,0 +1,1045 @@
+/* ==========================================================================
+   ImageWorks Creative — Navigation Comp
+   The design system is taken verbatim from the branding page so the two sit
+   in the same visual world:
+   https://imageworksc.github.io/branding-page/
+   Single light theme. No dark mode — the brand commits to one visual world.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---- brand ---- */
+  --navy: #143c66;
+  --navy-deep: #0a2c4d;
+  --blue: #1266b5;
+  --blue-bright: #1e6bb0;
+  --green: #80c34a;
+  --green-ink: #5c9a2e;          /* the green that carries text and links */
+  --ink: #1f2b3e;                /* body copy */
+  --muted: #5a6b82;
+  --faint: #7d8ea1;
+  --nav-ink: #3d464d;
+
+  /* ---- surfaces ---- */
+  --white: #ffffff;
+  --band-tint: #f2f5f9;
+  --band-tint-warm: #f1f3f6;
+  --border: #e3eaf3;
+  --border-soft: #eef2f7;
+  --chip-blue: #c1daff;
+  --chip-green: #eaf6dd;
+  --tint-green: #eef6e6;
+  --tint-blue: #e5edf7;
+  --danger-soft: #fbe9e9;
+  --danger-ink: #b23b3b;
+  --warn-soft: #fdf1dd;
+  --warn-ink: #96601a;
+
+  --cta-band: linear-gradient(135deg, #1266b5, #0a2c4d);
+
+  /* ---- shape: the brand squares its corners at 2px ---- */
+  --r: 2px;
+
+  --shadow-card: 0 1px 3px rgba(20, 40, 80, .08), 0 14px 34px rgba(20, 40, 80, .1);
+  --shadow-flat: 0 1px 3px rgba(20, 40, 80, .07);
+  --shadow-lift: 0 4px 12px rgba(20, 40, 80, .18);
+  --shadow-nav: 0 1px 0 var(--border);
+  --shadow-nav-stuck: 0 1px 0 var(--border), 0 10px 28px -14px rgba(20, 40, 80, .28);
+  --ring: 0 0 0 3px rgba(128, 195, 74, .5), 0 0 0 1px rgba(20, 60, 102, .55);
+
+  /* ---- rhythm ---- */
+  --shell: 1180px;
+  --gutter: clamp(22px, 4vw, 40px);
+  --band-y: clamp(64px, 8vw, 108px);
+  --nav-h: 88px;
+  --measure: 66ch;
+
+  /* ---- type scale, anchored on the brand's 46px h1 / 44px h2 ---- */
+  --step--1: clamp(12.5px, .18vw + 12px, 13.5px);
+  --step-0: clamp(15.5px, .25vw + 15px, 17px);
+  --step-1: clamp(16.5px, .4vw + 15.5px, 18px);
+  --step-2: clamp(19px, .9vw + 17px, 23px);
+  --step-3: clamp(28px, 2.6vw + 18px, 44px);
+  --step-4: clamp(34px, 3vw + 20px, 46px);
+
+  --ease: cubic-bezier(.16, .84, .44, 1);
+}
+
+/* --------------------------------------------------------------------------
+   BASE
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-padding-top: calc(var(--nav-h) + 16px); }
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI',
+               Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* clip, not hidden: hidden would make body a scroll container and break the
+     sticky nav */
+  overflow-x: clip;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--navy);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.018em;
+  text-wrap: balance;
+}
+
+p { margin: 0; text-wrap: pretty; }
+ul, ol { margin: 0; padding: 0; }
+li { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+
+::selection { background: rgba(128, 195, 74, .28); }
+
+:where(a, button, summary):focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--r);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-to-content {
+  position: absolute;
+  top: 8px; left: 8px;
+  z-index: 400;
+  transform: translateY(-220%);
+  background: var(--navy);
+  color: #fff;
+  font-size: var(--step--1);
+  font-weight: 700;
+  padding: 11px 18px;
+  border-radius: var(--r);
+  text-decoration: none;
+  transition: transform .18s var(--ease);
+}
+.skip-to-content:focus-visible { transform: translateY(0); }
+
+.wrap {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* --------------------------------------------------------------------------
+   COMP STATUS BAR
+   The one piece of chrome that is not part of the brand: it belongs to the
+   review, not to the site, so it is deliberately plain.
+   -------------------------------------------------------------------------- */
+.status {
+  background: var(--navy-deep);
+  color: #fff;
+  transition: background .25s var(--ease);
+}
+body.show-status .status { background: var(--danger-ink); }
+
+.status__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-block: 9px;
+}
+.status__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.status__dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex: none;
+}
+body.show-status .status__dot { background: #ffd9d9; }
+
+.status__toggle {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1.5px solid rgba(255, 255, 255, .38);
+  border-radius: var(--r);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s var(--ease), border-color .2s var(--ease),
+              color .2s var(--ease);
+}
+.status__toggle:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--navy-deep);
+}
+body.show-status .status__toggle:hover { color: var(--danger-ink); }
+
+/* --------------------------------------------------------------------------
+   UTILITY BAR
+   -------------------------------------------------------------------------- */
+.utility {
+  background: var(--band-tint);
+  border-bottom: 1px solid var(--border);
+}
+.utility__inner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-block: 8px;
+  font-size: 13px;
+}
+.utility__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--nav-ink);
+  font-weight: 600;
+  border-radius: var(--r);
+  transition: color .18s var(--ease);
+}
+.utility__item:hover { color: var(--blue); }
+.utility__item--support { font-weight: 800; color: var(--navy); }
+.utility__item .icon { inline-size: 16px; block-size: 16px; flex: none; }
+.utility__sep { color: #c2ccdb; user-select: none; }
+
+/* --------------------------------------------------------------------------
+   NAV
+   -------------------------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  box-shadow: var(--shadow-nav);
+  transition: box-shadow .25s var(--ease);
+}
+.nav.is-stuck { box-shadow: var(--shadow-nav-stuck); }
+
+/* Above the drawer breakpoint there is no drawer, so there is nothing to
+   dim. The element only comes into being inside the media query below. */
+.nav-backdrop { display: none; }
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: var(--nav-h);
+}
+
+/* The signature lockup, set the way the branding page sets it: the mark on its
+   gradient disc, the name in navy, the descriptor tracked out in green. */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  border-radius: var(--r);
+  text-decoration: none;
+}
+.logo__disc {
+  display: grid;
+  place-items: center;
+  inline-size: 42px;
+  block-size: 42px;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--navy));
+  box-shadow: 0 6px 16px rgba(20, 60, 102, .24);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+.logo__word { display: flex; flex-direction: column; gap: 4px; }
+.logo__word b {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1;
+  color: var(--navy);
+}
+.logo__word span {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--green-ink);
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.menu__item { position: relative; }
+
+.menu__link {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  gap: 7px;
+  /* the full nav height, so the pointer never falls through a gap between the
+     trigger and the panel it opened */
+  height: var(--nav-h);
+  padding-inline: 15px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -.005em;
+  color: var(--nav-ink);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .18s var(--ease);
+}
+.menu__link:hover,
+.menu__item.is-open > .menu__link { color: var(--navy); }
+
+/* The rule grows from the left, the way the brand's links underline. */
+.menu__link::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: 24px;
+  height: 2px;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s var(--ease);
+}
+.menu__link:hover::after,
+.menu__item.is-open > .menu__link::after { transform: scaleX(1); }
+
+.menu__chev {
+  inline-size: 10px;
+  block-size: 10px;
+  flex: none;
+  transition: transform .25s var(--ease);
+}
+.menu__item.is-open > .menu__link .menu__chev { transform: rotate(180deg); }
+
+/* --------------------------------------------------------------------------
+   BUTTONS — the brand's .btn, at nav scale
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  height: 54px;
+  padding-inline: 26px;
+  border-radius: var(--r);
+  border: 1.5px solid transparent;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform .25s var(--ease), background-color .25s ease,
+              border-color .25s ease, box-shadow .25s ease, color .25s ease,
+              filter .25s ease;
+}
+.btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
+.btn:active { transform: translateY(-1px); }
+
+.btn--solid { background: var(--green); border-color: var(--green); color: #fff; }
+.btn--solid:hover { filter: brightness(1.04); }
+
+.btn--quiet {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--navy);
+  font-weight: 600;
+}
+.btn--quiet:hover { border-color: #c3d6ea; }
+
+.btn--nav { height: 44px; padding-inline: 22px; font-size: 15px; margin-left: 10px; }
+.btn--nav::after { display: none; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.band--cta .btn--solid {
+  height: 58px;
+  padding-inline: 36px;
+  font-size: 17px;
+  box-shadow: 0 1px 2px rgba(20, 40, 80, .14);
+}
+.band--cta .btn--quiet {
+  height: 58px;
+  padding-inline: 30px;
+  font-size: 17px;
+  border-color: rgba(255, 255, 255, .34);
+  color: #fff;
+}
+.band--cta .btn--quiet:hover { border-color: #fff; }
+
+/* --------------------------------------------------------------------------
+   DROPDOWN PANELS
+   -------------------------------------------------------------------------- */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: -6px;
+  min-inline-size: 420px;
+  padding: 18px 10px 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--green);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .18s var(--ease), transform .22s var(--ease),
+              visibility .22s;
+}
+.menu__item.is-open > .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.dropdown--narrow { min-inline-size: 268px; }
+
+/* A panel belonging to a trigger at the end of the bar opens leftward. */
+.menu__item[data-align="end"] > .dropdown { left: auto; right: -6px; }
+
+/* A section heading is the brand's eyebrow: 12px, tracked out, green, with the
+   dot in front of it. */
+.dropdown__label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 16px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+}
+.dropdown__label::before {
+  content: '';
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  flex: none;
+}
+/* the hairline finishes the rule the label starts */
+.dropdown__label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.dropdown__label--next { margin-top: 20px; }
+.dropdown__label-note {
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--faint);
+  flex: none;
+}
+
+/* A grid, not a wrapping flex row: the label takes the free column, the badge
+   the fixed one, and the accent spans both underneath. As flex-wrap the badge
+   dropped to a line of its own the moment the label ran long. */
+.dropdown__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  position: relative;
+  padding: 10px 16px;
+  border-radius: var(--r);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--nav-ink);
+  text-decoration: none;
+  transition: background-color .16s var(--ease), color .16s var(--ease);
+}
+/* the same rule that grows under the nav links, turned on its side */
+.dropdown__link::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  width: 3px;
+  height: 68%;
+  background: var(--green);
+  transform: translateY(-50%) scaleY(0);
+  transform-origin: center;
+  transition: transform .22s var(--ease);
+}
+.dropdown__link:hover,
+.dropdown__link:focus-visible {
+  background: var(--tint-blue);
+  color: var(--navy);
+}
+.dropdown__link:hover::before,
+.dropdown__link:focus-visible::before { transform: translateY(-50%) scaleY(1); }
+
+.dropdown__link-main {
+  grid-column: 1;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.dropdown__link > .dropdown__badge { grid-column: 2; }
+
+.dropdown__accent {
+  grid-column: 1 / -1;
+  margin-top: 3px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--faint);
+  transition: color .16s var(--ease);
+}
+.dropdown__link:hover .dropdown__accent,
+.dropdown__link:focus-visible .dropdown__accent { color: var(--blue); }
+
+.dropdown__ai { inline-size: 18px; block-size: 18px; flex: none; }
+
+.dropdown__badge {
+  align-self: center;
+  flex: none;
+  padding: 4px 9px;
+  border-radius: var(--r);
+  background: var(--chip-green);
+  color: var(--green-ink);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---- internal build markers, shown only by the status toggle ---- */
+.wf-note,
+.wf-progress { display: none; }
+body.show-status .wf-note,
+body.show-status .wf-progress {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: var(--r);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+body.show-status .wf-note {
+  color: var(--danger-ink);
+  background: var(--danger-soft);
+  border: 1px solid #f0cfcf;
+}
+body.show-status .wf-progress {
+  color: var(--warn-ink);
+  background: var(--warn-soft);
+  border: 1px solid #ecd3a6;
+}
+
+/* --------------------------------------------------------------------------
+   HAMBURGER — hidden until the drawer breakpoint
+   -------------------------------------------------------------------------- */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 10px;
+  background: none;
+  border: 0;
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.hamburger span {
+  display: block;
+  block-size: 2.5px;
+  inline-size: 100%;
+  background: var(--navy);
+  border-radius: 2px;
+  transition: transform .28s var(--ease), opacity .2s var(--ease);
+}
+.hamburger.is-active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.hamburger.is-active span:nth-child(2) { opacity: 0; }
+.hamburger.is-active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+/* --------------------------------------------------------------------------
+   HERO — the brand's construction, at comp scale
+   -------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(56px, 7vw, 96px);
+  background: linear-gradient(180deg,
+    var(--white) 0%, var(--white) 58%, var(--band-tint) 100%);
+}
+.hero-wash {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(180deg, #000 0, #000 52%, transparent 90%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 52%, transparent 90%);
+}
+.hero-wash span { position: absolute; left: 50%; will-change: transform; }
+.hero-wash__g {
+  inline-size: 1015px; block-size: 830px;
+  margin-left: -940px; top: -330px;
+  background: radial-gradient(closest-side ellipse at center,
+    rgba(128, 195, 74, .24), rgba(128, 195, 74, 0) 100%);
+  animation: washG 71s linear infinite;
+}
+.hero-wash__b {
+  inline-size: 1090px; block-size: 910px;
+  margin-left: -90px; top: -300px;
+  background: radial-gradient(closest-side ellipse at center,
+    rgba(18, 102, 181, .21), rgba(18, 102, 181, 0) 100%);
+  animation: washB 97s linear infinite;
+}
+@keyframes washG {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(66px, 42px, 0); }
+}
+@keyframes washB {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-58px, 34px, 0); }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+/* ---- the kit board ---- */
+.kit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.kit-t {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: rgba(255, 255, 255, .82);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-flat);
+  backdrop-filter: blur(6px);
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease),
+              border-color .35s var(--ease);
+}
+.kit-t:hover {
+  transform: translateY(-3px);
+  border-color: #c3d6ea;
+  box-shadow: var(--shadow-card);
+}
+.kit-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.kit-name { font-size: 12px; font-weight: 600; color: var(--muted); }
+
+.kit-disc {
+  display: grid;
+  place-items: center;
+  inline-size: 62px;
+  block-size: 62px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--navy));
+  box-shadow: 0 10px 24px rgba(20, 60, 102, .26);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+.kit-aa {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: .9;
+  letter-spacing: -.04em;
+  color: var(--navy);
+}
+.kit-swatches { display: flex; gap: 6px; }
+.kit-swatches li {
+  flex: 1;
+  block-size: 34px;
+  border-radius: var(--r);
+}
+.kit-box {
+  inline-size: 44px;
+  block-size: 44px;
+  border: 2px solid var(--green);
+  border-radius: var(--r);
+  background: var(--tint-green);
+}
+
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .kit { max-inline-size: 460px; }
+}
+@media (max-width: 420px) {
+  .kit { grid-template-columns: 1fr; }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+}
+.eyebrow::before {
+  content: '';
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  flex: none;
+}
+.band--cta .eyebrow { color: var(--green); }
+
+.hero h1 { font-size: var(--step-4); max-width: 16ch; }
+.sec-title { font-size: var(--step-3); max-width: 21ch; }
+.sec-title em { font-style: normal; color: var(--green-ink); }
+.band--cta .sec-title { color: #fff; }
+.band--cta .sec-title em { color: var(--green); }
+
+.lead {
+  font-size: var(--step-1);
+  line-height: 1.7;
+  max-width: var(--measure);
+  color: var(--muted);
+}
+.lead strong { color: var(--navy); font-weight: 700; }
+.band--cta .lead { color: rgba(226, 238, 252, .82); }
+.band--cta .lead strong { color: #fff; }
+
+/* --------------------------------------------------------------------------
+   BANDS
+   -------------------------------------------------------------------------- */
+.band { padding-block: var(--band-y); background: var(--white); }
+.band--tint { background: var(--band-tint); }
+
+.band--cta {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(72px, 8vw, 112px);
+  background: var(--cta-band);
+  color: #fff;
+}
+.band--cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+.band--cta > * { position: relative; }
+
+.band__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.band--cta .band__head { margin-bottom: 30px; }
+
+/* --------------------------------------------------------------------------
+   PANEL PREVIEW — every dropdown laid flat, side by side
+   The panels are cloned from the live nav at run time, so there is one copy of
+   the menu in the markup and the preview can never drift from it.
+   -------------------------------------------------------------------------- */
+/* Two up, at close to the width the panel actually opens at — three columns
+   squeezed them well under it and left the fourth stranded on its own row. */
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+@media (max-width: 520px) {
+  .panels { grid-template-columns: 1fr; }
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel__name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.panel__name::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+/* a cloned panel is a static card, not a floating one */
+.panel .dropdown {
+  position: static;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  min-inline-size: 0;
+  inline-size: 100%;
+  box-shadow: var(--shadow-flat);
+}
+
+/* --------------------------------------------------------------------------
+   SPEC LIST — what changed, for whoever reviews the comp
+   -------------------------------------------------------------------------- */
+/* Fixed counts rather than auto-fit: there are six cards, and at four across
+   the last two cells sat empty and showed the hairline ground as a grey slab.
+   Three and two both divide six exactly. */
+.specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 26px 24px;
+  background: var(--white);
+}
+.spec__k {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--green-ink);
+}
+.spec__k::before {
+  content: '';
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex: none;
+}
+.spec__t { font-size: var(--step-1); font-weight: 800; color: var(--navy); }
+.spec__d { font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .specs { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
+   FOOTER
+   -------------------------------------------------------------------------- */
+.foot {
+  padding-block: 48px;
+  background: var(--navy-deep);
+  color: rgba(226, 238, 252, .76);
+  font-size: 14px;
+}
+.foot__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 28px 40px;
+}
+.foot__brand { display: flex; flex-direction: column; gap: 8px; }
+.foot__name { color: #fff; font-weight: 800; letter-spacing: -.01em; }
+.foot__set { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.foot__set div { display: flex; flex-direction: column; gap: 4px; }
+.foot__k {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.foot a { color: #fff; text-decoration: none; border-radius: var(--r); }
+.foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   DRAWER — under 1000px the menu becomes a panel with inline accordions
+   -------------------------------------------------------------------------- */
+@media (max-width: 1000px) {
+  :root { --nav-h: 72px; }
+
+  .hamburger { display: flex; }
+
+  .menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    block-size: 100dvh;
+    inline-size: min(380px, 88vw);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 84px 0 40px;
+    background: #fff;
+    box-shadow: -12px 0 40px -12px rgba(20, 60, 102, .28);
+    transform: translateX(100%);
+    transition: transform .3s var(--ease);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 200;
+  }
+  .menu.is-open { transform: translateX(0); }
+
+  .menu__item { inline-size: 100%; }
+
+  .menu__link {
+    inline-size: 100%;
+    justify-content: space-between;
+    height: auto;
+    padding: 15px 24px;
+    font-size: 17px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .menu__link::after { display: none; }
+  .menu__chev { inline-size: 14px; block-size: 14px; }
+
+  .btn--nav {
+    margin: 22px 24px 0;
+    inline-size: calc(100% - 48px);
+  }
+
+  /* Panels open inline instead of floating. Scoped to the menu: the preview
+     grid holds clones of these same panels and must keep them on show. */
+  .menu .dropdown,
+  .menu .dropdown--narrow {
+    position: static;
+    min-inline-size: 0;
+    inline-size: 100%;
+    padding: 12px 14px 18px;
+    background: var(--band-tint);
+    border: 0;
+    border-bottom: 1px solid var(--border-soft);
+    border-radius: 0;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    display: none;
+  }
+  .menu .menu__item.is-open > .dropdown { display: block; }
+  .menu .dropdown__label { margin-inline: 10px; }
+
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 44, 77, .42);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .28s var(--ease), visibility .28s;
+    z-index: 150;
+  }
+  .nav-backdrop.is-open { opacity: 1; visibility: visible; }
+
+  .utility__inner { justify-content: center; }
+}
+
+@media (max-width: 560px) {
+  .foot__inner { flex-direction: column; }
+  .utility__item span.utility__long { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .btn:hover { transform: none; }
+}
