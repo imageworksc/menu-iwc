@@ -1,172 +1,352 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Navigation Comp | ImageWorks Creative</title>
-<meta name="description" content="Working comp of the ImageWorks Creative main navigation — utility bar, mega-menu panels, and mobile drawer, built on the brand's design system.">
-<meta name="theme-color" content="#143c66">
-<meta name="robots" content="noindex, nofollow">
 
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ImageWorks Creative">
-<meta property="og:title" content="Navigation Comp">
-<meta property="og:description" content="Working comp of the ImageWorks Creative main navigation, built on the brand's design system.">
-<meta property="og:image" content="https://www.imageworkscreative.com/sites/default/files/imageworks-creative-logo.jpg">
+  <!-- ====================================================================
+       DOCUMENT
+       ==================================================================== -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Navigation | ImageWorks Creative</title>
+  <meta name="description" content="The ImageWorks Creative main navigation: utility bar, mega-menu panels, and mobile drawer, built on the brand's design system.">
+  <meta name="theme-color" content="#143c66">
+  <meta name="robots" content="noindex, nofollow">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23143c66'/><circle cx='16' cy='16' r='6' fill='%2380c34a'/></svg>">
+  <!-- ====================================================================
+       SOCIAL
+       ==================================================================== -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ImageWorks Creative">
+  <meta property="og:title" content="Navigation">
+  <meta property="og:description" content="The ImageWorks Creative main navigation, built on the brand's design system.">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+  <!-- ====================================================================
+       ASSETS
+       ==================================================================== -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+
+  <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
 
-<!-- Shared icon set, drawn once. -->
-<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-  <defs>
-    <symbol id="i-chevron" viewBox="0 0 12 12">
-      <path d="M2 4 L6 8 L10 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    </symbol>
-    <symbol id="i-ticket" viewBox="0 0 24 24">
-      <rect x="5" y="4" width="14" height="18" rx="1" fill="#e5edf7" stroke="#1266b5" stroke-width="1.6"/>
-      <path d="M9 3.5h6a1 1 0 0 1 1 1V6a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z" fill="#1266b5"/>
-      <path d="M8.5 12.5l1.4 1.4 2.6-2.8" fill="none" stroke="#80c34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="14" y1="12.2" x2="16.5" y2="12.2" stroke="#1266b5" stroke-width="1.6" stroke-linecap="round"/>
-      <line x1="8" y1="17.5" x2="16.5" y2="17.5" stroke="#1266b5" stroke-width="1.6" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="i-phone" viewBox="0 0 24 24">
-      <path d="M6.5 4h3l1.3 3.3-2 1.4a12 12 0 0 0 5 5l1.4-2 3.3 1.3v3a1.8 1.8 0 0 1-2 1.8A15.5 15.5 0 0 1 4.7 6a1.8 1.8 0 0 1 1.8-2Z" fill="#80c34a"/>
-    </symbol>
-  </defs>
-</svg>
+  <!-- ====================================================================
+       ICON SPRITE
+       Only the chevron lives here — it is drawn four times. The two utility
+       icons appear once each and are written inline below, so their parts
+       can be coloured from the stylesheet instead of from attributes.
+       ==================================================================== -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-chevron" viewBox="0 0 12 12">
+        <path d="M2 4 L6 8 L10 4"/>
+      </symbol>
+    </defs>
+  </svg>
 
-<!-- Review chrome. Not part of the site — it toggles the internal build
-     markers that are hidden from the production view. -->
-<div class="status" id="status">
-  <div class="wrap status__inner">
-    <span class="status__label"><span class="status__dot"></span><span id="statusLabel">Production comp</span></span>
-    <button class="status__toggle" id="statusToggle" type="button" aria-pressed="false">Show build progress</button>
+  <!-- ====================================================================
+       REVIEW CHROME
+       Not part of the site. It toggles the internal build markers that are
+       hidden from the production view.
+       ==================================================================== -->
+  <div class="status" id="status">
+    <div class="wrap status__inner">
+      <span class="status__label">
+        <span class="status__dot"></span>
+        <span id="statusLabel">Production comp</span>
+      </span>
+      <button class="status__toggle" id="statusToggle" type="button" aria-pressed="false">
+        Show build progress
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="utility">
-  <div class="wrap utility__inner">
-    <a class="utility__item utility__item--support" href="/support-request">
-      <svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg>
-      Service Request
-    </a>
-    <span class="utility__sep" aria-hidden="true">|</span>
-    <a class="utility__item" href="tel:+17039287309">
-      <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
-      <span class="utility__long">Call or text!&nbsp;</span>(703) 928-7309
-    </a>
+  <!-- ====================================================================
+       UTILITY BAR
+       ==================================================================== -->
+  <div class="utility">
+    <div class="wrap utility__inner">
+
+      <a class="utility__item utility__item--support" href="/support-request">
+        <svg class="utility__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect class="i-ticket__board" x="5" y="4" width="14" height="18" rx="1"/>
+          <path class="i-ticket__clip" d="M9 3.5h6a1 1 0 0 1 1 1V6a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/>
+          <path class="i-ticket__check" d="M8.5 12.5l1.4 1.4 2.6-2.8"/>
+          <line class="i-ticket__rule" x1="14" y1="12.2" x2="16.5" y2="12.2"/>
+          <line class="i-ticket__rule" x1="8" y1="17.5" x2="16.5" y2="17.5"/>
+        </svg>
+        Service Request
+      </a>
+
+      <span class="utility__sep" aria-hidden="true">|</span>
+
+      <a class="utility__item" href="tel:+17039287309">
+        <svg class="utility__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path class="i-phone__body" d="M6.5 4h3l1.3 3.3-2 1.4a12 12 0 0 0 5 5l1.4-2 3.3 1.3v3a1.8 1.8 0 0 1-2 1.8A15.5 15.5 0 0 1 4.7 6a1.8 1.8 0 0 1 1.8-2Z"/>
+        </svg>
+        <span class="utility__long">Call or text!&nbsp;</span>(703) 928-7309
+      </a>
+
+    </div>
   </div>
-</div>
 
-<nav class="nav" id="nav" aria-label="Main">
-  <div class="nav-backdrop"></div>
-  <div class="wrap nav__inner">
-    <!-- Served from this repo rather than hotlinked: the live site sits behind
-         a Cloudflare challenge that refuses direct image requests. The file is
-         the brand's own mark, taken from imageworksc/imageworks-home. -->
-    <a class="logo" href="https://www.imageworkscreative.com/">
-      <img src="assets/logo.png" width="158" height="40"
-           alt="ImageWorks Creative" loading="eager" decoding="async">
-    </a>
+  <!-- ====================================================================
+       NAV
+       ==================================================================== -->
+  <nav class="nav" id="nav" aria-label="Main">
 
-    <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-backdrop"></div>
 
-    <ul class="menu" id="menu">
-      <li class="menu__item" data-menu="web">
-        <button class="menu__link" type="button" aria-expanded="false" aria-controls="panel-web">
-          Web
-          <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
-        </button>
-        <div class="dropdown" id="panel-web">
-          <p class="dropdown__label">Website Design</p>
-          <ul>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Custom Website Design<span class="wf-note">Polish &amp; HTML ready</span></span><span class="dropdown__accent">Drupal / WordPress</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">AI Website Design<svg class="dropdown__ai" viewBox="0 0 24 24" fill="#80c34a" aria-hidden="true"><path d="M9 1.5C9.6 5.4 12.6 8.4 16.5 9C12.6 9.6 9.6 12.6 9 16.5C8.4 12.6 5.4 9.6 1.5 9C5.4 8.4 8.4 5.4 9 1.5Z"/><path d="M19 14.7C19.34 16.93 21.13 18.66 23.3 19C21.13 19.34 19.34 21.07 19 23.3C18.66 21.07 16.87 19.34 14.7 19C16.87 18.66 18.66 16.93 19 14.7Z"/></svg></span><span class="dropdown__accent">Fast &amp; affordable</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Homepage Facelift</span><span class="dropdown__accent">Low cost &middot; major impact</span></a></li>
-          </ul>
-          <p class="dropdown__label dropdown__label--next">Website Services</p>
-          <ul>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Website Content</span><span class="dropdown__accent">AI &amp; SEO ready</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Website Support &amp; Evolution<span class="wf-progress">In progress</span></span><span class="dropdown__badge">Essential</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Website Maintenance<span class="wf-note">Polish &amp; HTML ready</span></span><span class="dropdown__accent">Drupal &amp; WordPress</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Advanced Website Animations</span></a></li>
-          </ul>
-        </div>
-      </li>
+    <div class="wrap nav__inner">
 
-      <li class="menu__item" data-menu="marketing">
-        <button class="menu__link" type="button" aria-expanded="false" aria-controls="panel-marketing">
-          Marketing
-          <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
-        </button>
-        <div class="dropdown" id="panel-marketing">
-          <p class="dropdown__label">AI, SEO &amp; Maps <span class="dropdown__label-note">(Modern search)</span></p>
-          <ul>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">SEO &amp; AI Search Setup<span class="wf-note">Polish &amp; HTML ready</span></span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">On-Page Content Optimization</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">SEO/AIO Blogging<span class="wf-note">Polish &amp; HTML ready</span></span><span class="dropdown__accent">Traffic + links</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Citations &amp; Entity Signals</span><span class="dropdown__accent">AI trust + local signals</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Google Maps Optimization</span><span class="dropdown__badge">Rank locally</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Location &amp; Service-Area Pages</span></a></li>
-          </ul>
-          <p class="dropdown__label dropdown__label--next">PPC Advertising</p>
-          <ul>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Google &amp; Meta Ads</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Social Media Reels &amp; Ads</span></a></li>
-          </ul>
-        </div>
-      </li>
+      <!-- ---- logo ------------------------------------------------------
+           Served from this repo rather than hotlinked: the live site sits
+           behind a Cloudflare challenge that refuses direct image requests.
+           The file is the brand's own mark, taken from the organisation's
+           imageworks-home repository.
+           ---------------------------------------------------------------- -->
+      <a class="logo" href="https://www.imageworkscreative.com/">
+        <img src="assets/logo.png" width="158" height="40"
+             alt="ImageWorks Creative" loading="eager" decoding="async">
+      </a>
 
-      <li class="menu__item">
-        <a class="menu__link" href="#">Branding<span class="wf-note">Polish &amp; HTML ready</span></a>
-      </li>
+      <!-- ---- drawer toggle, shown under 1000px ---- -->
+      <button class="hamburger" type="button"
+              aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+        <span></span><span></span><span></span>
+      </button>
 
-      <li class="menu__item" data-menu="plans">
-        <button class="menu__link" type="button" aria-expanded="false" aria-controls="panel-plans">
-          Plans
-          <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
-        </button>
-        <div class="dropdown dropdown--narrow" id="panel-plans">
-          <ul>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Marketing Plans<span class="wf-note">Polish &amp; HTML ready</span></span><span class="dropdown__accent">Local &amp; B2B</span></a></li>
-          </ul>
-        </div>
-      </li>
+      <!-- ---- the bar ---- -->
+      <ul class="menu" id="menu">
 
-      <li class="menu__item"><a class="menu__link" href="#">Portfolio</a></li>
+        <!-- ---------- Web ---------- -->
+        <li class="menu__item" data-menu="web">
+          <button class="menu__link" type="button"
+                  aria-expanded="false" aria-controls="panel-web">
+            Web
+            <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
 
-      <!-- Anchored to its right edge: it is the last trigger on the bar, and
-           left-anchored it ran past the viewport at the narrow end of the
-           desktop range. -->
-      <li class="menu__item" data-menu="about" data-align="end">
-        <button class="menu__link" type="button" aria-expanded="false" aria-controls="panel-about">
-          About
-          <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
-        </button>
-        <div class="dropdown dropdown--narrow" id="panel-about">
-          <ul>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">About Us</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Customer's Lounge</span></a></li>
-            <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Blog</span></a></li>
-          </ul>
-        </div>
-      </li>
+          <div class="dropdown" id="panel-web">
+            <p class="dropdown__label">Website Design</p>
+            <ul>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    Custom Website Design
+                    <span class="wf-note">Polish &amp; HTML ready</span>
+                  </span>
+                  <span class="dropdown__accent">Drupal / WordPress</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    AI Website Design
+                    <svg class="dropdown__ai" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M9 1.5C9.6 5.4 12.6 8.4 16.5 9C12.6 9.6 9.6 12.6 9 16.5C8.4 12.6 5.4 9.6 1.5 9C5.4 8.4 8.4 5.4 9 1.5Z"/>
+                      <path d="M19 14.7C19.34 16.93 21.13 18.66 23.3 19C21.13 19.34 19.34 21.07 19 23.3C18.66 21.07 16.87 19.34 14.7 19C16.87 18.66 18.66 16.93 19 14.7Z"/>
+                    </svg>
+                  </span>
+                  <span class="dropdown__accent">Fast &amp; affordable</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Homepage Facelift</span>
+                  <span class="dropdown__accent">Low cost &middot; major impact</span>
+                </a>
+              </li>
+            </ul>
 
-      <li class="menu__item"><a class="btn btn--quiet btn--nav" href="#">Contact</a></li>
-    </ul>
-  </div>
-</nav>
+            <p class="dropdown__label dropdown__label--next">Website Services</p>
+            <ul>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Website Content</span>
+                  <span class="dropdown__accent">AI &amp; SEO ready</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    Website Support &amp; Evolution
+                    <span class="wf-progress">In progress</span>
+                  </span>
+                  <span class="dropdown__badge">Essential</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    Website Maintenance
+                    <span class="wf-note">Polish &amp; HTML ready</span>
+                  </span>
+                  <span class="dropdown__accent">Drupal &amp; WordPress</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Advanced Website Animations</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
 
+        <!-- ---------- Marketing ---------- -->
+        <li class="menu__item" data-menu="marketing">
+          <button class="menu__link" type="button"
+                  aria-expanded="false" aria-controls="panel-marketing">
+            Marketing
+            <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
 
-<script src="script.js" defer></script>
+          <div class="dropdown" id="panel-marketing">
+            <p class="dropdown__label">
+              AI, SEO &amp; Maps
+              <span class="dropdown__label-note">(Modern search)</span>
+            </p>
+            <ul>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    SEO &amp; AI Search Setup
+                    <span class="wf-note">Polish &amp; HTML ready</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">On-Page Content Optimization</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    SEO/AIO Blogging
+                    <span class="wf-note">Polish &amp; HTML ready</span>
+                  </span>
+                  <span class="dropdown__accent">Traffic + links</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Citations &amp; Entity Signals</span>
+                  <span class="dropdown__accent">AI trust + local signals</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Google Maps Optimization</span>
+                  <span class="dropdown__badge">Rank locally</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Location &amp; Service-Area Pages</span>
+                </a>
+              </li>
+            </ul>
+
+            <p class="dropdown__label dropdown__label--next">PPC Advertising</p>
+            <ul>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Google &amp; Meta Ads</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Social Media Reels &amp; Ads</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ---------- Branding ---------- -->
+        <li class="menu__item">
+          <a class="menu__link" href="#">
+            Branding
+            <span class="wf-note">Polish &amp; HTML ready</span>
+          </a>
+        </li>
+
+        <!-- ---------- Plans ---------- -->
+        <li class="menu__item" data-menu="plans">
+          <button class="menu__link" type="button"
+                  aria-expanded="false" aria-controls="panel-plans">
+            Plans
+            <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
+
+          <div class="dropdown dropdown--narrow" id="panel-plans">
+            <ul>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">
+                    Marketing Plans
+                    <span class="wf-note">Polish &amp; HTML ready</span>
+                  </span>
+                  <span class="dropdown__accent">Local &amp; B2B</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ---------- Portfolio ---------- -->
+        <li class="menu__item">
+          <a class="menu__link" href="#">Portfolio</a>
+        </li>
+
+        <!-- ---------- About ----------
+             Anchored to its right edge: it is the last trigger on the bar,
+             and left-anchored it ran past the viewport at the narrow end of
+             the desktop range. -->
+        <li class="menu__item" data-menu="about" data-align="end">
+          <button class="menu__link" type="button"
+                  aria-expanded="false" aria-controls="panel-about">
+            About
+            <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
+
+          <div class="dropdown dropdown--narrow" id="panel-about">
+            <ul>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">About Us</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Customer's Lounge</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown__link" href="#">
+                  <span class="dropdown__link-main">Blog</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- ---------- Contact ---------- -->
+        <li class="menu__item">
+          <a class="btn btn--quiet btn--nav" href="#">Contact</a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+
+  <script src="script.js" defer></script>
+
 </body>
 </html>

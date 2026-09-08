@@ -1,32 +1,67 @@
 /* ==========================================================================
-   ImageWorks Creative — Navigation Comp
-   Three behaviours, kept apart: the desktop menu, the mobile drawer, and the
-   review chrome. Nothing here depends on a library.
+   ImageWorks Creative — Navigation
+   ==========================================================================
+
+   Four behaviours, kept apart: the desktop panels, the keyboard map, the
+   mobile drawer, and the review chrome. No dependencies.
+
+   CONTENTS
+     1. Config and element references
+     2. Panel open/close
+     3. Pointer
+     4. Keyboard
+     5. Drawer
+     6. Stuck nav
+     7. Review chrome
+
    ========================================================================== */
 (function () {
   'use strict';
 
+  /* ========================================================================
+     1. CONFIG AND ELEMENT REFERENCES
+     ======================================================================== */
+
+  /* Kept in step with the breakpoint in styles.css §14. */
   var DRAWER_AT = '(max-width: 1000px)';
+  var CLOSE_DELAY = 140;   /* ms of grace on the diagonal trip to a panel */
+
   var mq = window.matchMedia(DRAWER_AT);
 
   var nav = document.getElementById('nav');
   var menu = document.getElementById('menu');
   var hamburger = document.querySelector('.hamburger');
   var backdrop = document.querySelector('.nav-backdrop');
+
+  /* The items that own a panel. */
   var items = Array.prototype.slice.call(
     document.querySelectorAll('.menu__item[data-menu]')
   );
-  /* every top-level control on the bar, in the order it is read */
+
+  /* Every top-level control on the bar, in the order it is read. */
   var bar = Array.prototype.slice.call(
     document.querySelectorAll('.menu > .menu__item > .menu__link, .menu > .menu__item > .btn')
   );
 
   var closeTimer = null;
+  var lastFocus = null;
 
-  /* ------------------------------------------------------------------------
-     PANELS
-     ------------------------------------------------------------------------ */
-  function triggerOf(item) { return item.querySelector('.menu__link'); }
+
+  /* ========================================================================
+     2. PANEL OPEN/CLOSE
+     ======================================================================== */
+
+  function triggerOf(item) {
+    return item.querySelector('.menu__link');
+  }
+
+  function linksIn(item) {
+    return Array.prototype.slice.call(item.querySelectorAll('.dropdown__link'));
+  }
+
+  function isOpen(item) {
+    return item.classList.contains('is-open');
+  }
 
   function closeItem(item) {
     item.classList.remove('is-open');
@@ -34,7 +69,9 @@
   }
 
   function closeAll(except) {
-    items.forEach(function (i) { if (i !== except) closeItem(i); });
+    items.forEach(function (i) {
+      if (i !== except) closeItem(i);
+    });
   }
 
   function openItem(item) {
@@ -44,36 +81,60 @@
     triggerOf(item).setAttribute('aria-expanded', 'true');
   }
 
-  function isOpen(item) { return item.classList.contains('is-open'); }
-
   function toggleItem(item) {
-    if (isOpen(item)) closeItem(item); else openItem(item);
+    if (isOpen(item)) closeItem(item);
+    else openItem(item);
   }
 
-  function linksIn(item) {
-    return Array.prototype.slice.call(item.querySelectorAll('.dropdown__link'));
-  }
+
+  /* ========================================================================
+     3. POINTER
+     ======================================================================== */
 
   items.forEach(function (item) {
     var trigger = triggerOf(item);
 
-    /* ---- pointer: open on enter, close on a short delay so the diagonal
-       trip from the label to the panel does not lose it ---- */
+    /* Open on enter, close on a short delay so the diagonal trip from the
+       label to the panel does not lose it. */
     item.addEventListener('mouseenter', function () {
       if (!mq.matches) openItem(item);
     });
+
     item.addEventListener('mouseleave', function () {
       if (mq.matches) return;
-      closeTimer = window.setTimeout(function () { closeItem(item); }, 140);
+      closeTimer = window.setTimeout(function () {
+        closeItem(item);
+      }, CLOSE_DELAY);
     });
 
-    /* ---- click: works as a toggle on both sides of the breakpoint ---- */
+    /* Click toggles, on both sides of the breakpoint. */
     trigger.addEventListener('click', function (e) {
       e.preventDefault();
       toggleItem(item);
     });
 
-    /* ---- keyboard on the trigger: down into the panel it owns ---- */
+    /* Focus leaving the item entirely closes it. */
+    item.addEventListener('focusout', function (e) {
+      if (mq.matches) return;
+      if (!item.contains(e.relatedTarget)) closeItem(item);
+    });
+  });
+
+  /* A click anywhere else closes the panels. */
+  document.addEventListener('click', function (e) {
+    if (mq.matches) return;
+    if (!e.target.closest('.menu__item')) closeAll(null);
+  });
+
+
+  /* ========================================================================
+     4. KEYBOARD
+     ======================================================================== */
+
+  /* ---- on a trigger: down into the panel it owns ---- */
+  items.forEach(function (item) {
+    var trigger = triggerOf(item);
+
     trigger.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
@@ -88,7 +149,7 @@
       }
     });
 
-    /* ---- keyboard inside the panel ---- */
+    /* ---- inside a panel ---- */
     item.querySelector('.dropdown').addEventListener('keydown', function (e) {
       var all = linksIn(item);
       var i = all.indexOf(document.activeElement);
@@ -99,7 +160,8 @@
         all[(i + 1) % all.length].focus();
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        if (i === 0) trigger.focus(); else all[i - 1].focus();
+        if (i === 0) trigger.focus();
+        else all[i - 1].focus();
       } else if (e.key === 'Home') {
         e.preventDefault();
         all[0].focus();
@@ -107,21 +169,16 @@
         e.preventDefault();
         all[all.length - 1].focus();
       } else if (e.key === 'Tab' && !e.shiftKey && i === all.length - 1) {
-        /* tabbing off the end closes the panel rather than leaving it hanging
-           open behind the next section */
+        /* Tabbing off the end closes the panel rather than leaving it hanging
+           open behind the next section. */
         closeItem(item);
       }
     });
-
-    /* focus leaving the item entirely closes it */
-    item.addEventListener('focusout', function (e) {
-      if (mq.matches) return;
-      if (!item.contains(e.relatedTarget)) closeItem(item);
-    });
   });
 
-  /* Left and right move along the whole bar, including the entries that own no
-     panel — otherwise the arrow keys would stall on Branding and Portfolio. */
+  /* ---- along the bar ----
+     Bound to every control, including the entries that own no panel —
+     otherwise the arrow keys would stall on Branding and Portfolio. */
   bar.forEach(function (el, i) {
     el.addEventListener('keydown', function (e) {
       if (mq.matches) return;
@@ -142,11 +199,14 @@
     });
   });
 
-  /* Escape closes whatever is open and hands focus back to its trigger. */
+  /* ---- Escape closes whatever is open, and hands focus back ---- */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
 
-    if (menu.classList.contains('is-open')) { closeDrawer(); return; }
+    if (menu.classList.contains('is-open')) {
+      closeDrawer();
+      return;
+    }
 
     var open = items.filter(isOpen)[0];
     if (open) {
@@ -155,21 +215,17 @@
     }
   });
 
-  /* A click anywhere else closes the panels. */
-  document.addEventListener('click', function (e) {
-    if (mq.matches) return;
-    if (!e.target.closest('.menu__item')) closeAll(null);
-  });
 
-  /* ------------------------------------------------------------------------
-     DRAWER
-     ------------------------------------------------------------------------ */
-  var lastFocus = null;
+  /* ========================================================================
+     5. DRAWER
+     ======================================================================== */
 
   function focusables() {
     return Array.prototype.slice.call(
       menu.querySelectorAll('a[href], button:not([disabled])')
-    ).filter(function (el) { return el.offsetParent !== null; });
+    ).filter(function (el) {
+      return el.offsetParent !== null;
+    });
   }
 
   function openDrawer() {
@@ -179,7 +235,9 @@
     hamburger.classList.add('is-active');
     hamburger.setAttribute('aria-expanded', 'true');
     hamburger.setAttribute('aria-label', 'Close menu');
-    document.body.style.overflow = 'hidden';
+    /* A class rather than an inline style: the page scroll lock is a state,
+       and its declaration belongs in the stylesheet with everything else. */
+    document.body.classList.add('is-locked');
   }
 
   function closeDrawer() {
@@ -188,7 +246,7 @@
     hamburger.classList.remove('is-active');
     hamburger.setAttribute('aria-expanded', 'false');
     hamburger.setAttribute('aria-label', 'Open menu');
-    document.body.style.overflow = '';
+    document.body.classList.remove('is-locked');
     closeAll(null);
 
     if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
@@ -196,8 +254,10 @@
   }
 
   hamburger.addEventListener('click', function () {
-    if (menu.classList.contains('is-open')) closeDrawer(); else openDrawer();
+    if (menu.classList.contains('is-open')) closeDrawer();
+    else openDrawer();
   });
+
   backdrop.addEventListener('click', closeDrawer);
 
   /* Tab stays inside the drawer while it is open. */
@@ -232,9 +292,11 @@
     closeAll(null);
   });
 
-  /* ------------------------------------------------------------------------
-     STUCK NAV
-     ------------------------------------------------------------------------ */
+
+  /* ========================================================================
+     6. STUCK NAV
+     ======================================================================== */
+
   var ticking = false;
 
   function readStuck() {
@@ -250,9 +312,11 @@
 
   readStuck();
 
-  /* ------------------------------------------------------------------------
-     REVIEW CHROME
-     ------------------------------------------------------------------------ */
+
+  /* ========================================================================
+     7. REVIEW CHROME
+     ======================================================================== */
+
   var toggle = document.getElementById('statusToggle');
   var label = document.getElementById('statusLabel');
 
@@ -264,4 +328,5 @@
       label.textContent = on ? 'Internal — build tracker' : 'Production comp';
     });
   }
+
 })();

@@ -1,13 +1,37 @@
 /* ==========================================================================
    ImageWorks Creative — Navigation
+   ==========================================================================
+
    Utility bar, main nav with its panels, and the mobile drawer. Nothing else:
    the page is the bar itself.
 
    The tokens are taken verbatim from the branding page so the two sit in the
    same visual world: https://imageworksc.github.io/branding-page/
    Single light theme. No dark mode — the brand commits to one visual world.
+
+   CONTENTS
+     1.  Tokens
+     2.  Base
+     3.  Layout
+     4.  Icons
+     5.  Review chrome
+     6.  Utility bar
+     7.  Nav shell
+     8.  Logo
+     9.  Menu bar
+     10. Button
+     11. Dropdown panels
+     12. Build markers
+     13. Hamburger
+     14. Drawer
+     15. Reduced motion
+
    ========================================================================== */
 
+
+/* ==========================================================================
+   1. TOKENS
+   ========================================================================== */
 :root {
   color-scheme: light;
 
@@ -25,35 +49,48 @@
   --band-tint: #f2f5f9;
   --border: #e3eaf3;
   --border-soft: #eef2f7;
+  --border-hover: #c3d6ea;
   --chip-green: #eaf6dd;
   --tint-blue: #e5edf7;
   --danger-soft: #fbe9e9;
+  --danger-line: #f0cfcf;
   --danger-ink: #b23b3b;
   --warn-soft: #fdf1dd;
+  --warn-line: #ecd3a6;
   --warn-ink: #96601a;
 
   /* ---- shape: the brand squares its corners at 2px ---- */
   --r: 2px;
 
+  /* ---- depth ---- */
   --shadow-card: 0 1px 3px rgba(20, 40, 80, .08), 0 14px 34px rgba(20, 40, 80, .1);
   --shadow-lift: 0 4px 12px rgba(20, 40, 80, .18);
   --shadow-nav: 0 1px 0 var(--border);
   --shadow-nav-stuck: 0 1px 0 var(--border), 0 10px 28px -14px rgba(20, 40, 80, .28);
+  --shadow-drawer: -12px 0 40px -12px rgba(20, 60, 102, .28);
   --ring: 0 0 0 3px rgba(128, 195, 74, .5), 0 0 0 1px rgba(20, 60, 102, .55);
+  --scrim: rgba(10, 44, 77, .42);
 
   /* ---- rhythm ---- */
   --shell: 1180px;
   --gutter: clamp(22px, 4vw, 40px);
   --nav-h: 88px;
+  --logo-h: 40px;
+  --drawer-w: min(380px, 88vw);
 
+  /* ---- type ---- */
+  --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI',
+          Roboto, Helvetica, Arial, sans-serif;
   --step-0: clamp(15.5px, .25vw + 15px, 17px);
 
+  /* ---- motion ---- */
   --ease: cubic-bezier(.16, .84, .44, 1);
 }
 
-/* --------------------------------------------------------------------------
-   BASE
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   2. BASE
+   ========================================================================== */
 *,
 *::before,
 *::after { box-sizing: border-box; }
@@ -64,8 +101,7 @@ body {
      viewport — it gives the panels something to open over and keeps the white
      nav reading as a bar rather than as the page. */
   min-block-size: 100vh;
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI',
-               Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font);
   font-size: var(--step-0);
   font-weight: 400;
   line-height: 1.65;
@@ -77,6 +113,9 @@ body {
      sticky nav */
   overflow-x: clip;
 }
+
+/* Set by the drawer while it is open, so the page behind it cannot scroll. */
+body.is-locked { overflow: hidden; }
 
 p { margin: 0; text-wrap: pretty; }
 ul { margin: 0; padding: 0; }
@@ -92,6 +131,10 @@ a { color: inherit; }
   border-radius: var(--r);
 }
 
+
+/* ==========================================================================
+   3. LAYOUT
+   ========================================================================== */
 .wrap {
   width: 100%;
   max-width: var(--shell);
@@ -99,11 +142,52 @@ a { color: inherit; }
   padding-inline: var(--gutter);
 }
 
-/* --------------------------------------------------------------------------
-   COMP STATUS BAR
-   The one piece of chrome that is not part of the brand: it belongs to the
-   review, not to the site, so it is deliberately plain.
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   4. ICONS
+   Every icon colour lives here rather than on the markup. The chevron is a
+   sprite symbol, so its properties are set on the host <svg> and inherit
+   through <use> into the shadow tree — which is why they are all inherited
+   SVG properties and not, say, a class on the path.
+   ========================================================================== */
+
+/* The sprite itself is never seen; it only carries the symbol. */
+.sprite {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+}
+
+/* ---- service-request ticket ---- */
+.i-ticket__board {
+  fill: var(--tint-blue);
+  stroke: var(--blue);
+  stroke-width: 1.6;
+}
+.i-ticket__clip { fill: var(--blue); }
+.i-ticket__check {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.i-ticket__rule {
+  stroke: var(--blue);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* ---- phone handset ---- */
+.i-phone__body { fill: var(--green); }
+
+
+/* ==========================================================================
+   5. REVIEW CHROME
+   The one piece that is not part of the brand: it belongs to the review, not
+   to the site, so it is deliberately plain.
+   ========================================================================== */
 .status {
   background: var(--navy-deep);
   color: #fff;
@@ -119,6 +203,7 @@ body.show-status .status { background: var(--danger-ink); }
   gap: 8px 16px;
   padding-block: 9px;
 }
+
 .status__label {
   display: inline-flex;
   align-items: center;
@@ -128,26 +213,27 @@ body.show-status .status { background: var(--danger-ink); }
   letter-spacing: .14em;
   text-transform: uppercase;
 }
+
 .status__dot {
   inline-size: 7px;
   block-size: 7px;
+  flex: none;
   border-radius: 50%;
   background: var(--green);
-  flex: none;
 }
 body.show-status .status__dot { background: #ffd9d9; }
 
 .status__toggle {
-  font: inherit;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .06em;
-  text-transform: uppercase;
   padding: 6px 14px;
   border: 1.5px solid rgba(255, 255, 255, .38);
   border-radius: var(--r);
   background: transparent;
   color: #fff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: background .2s var(--ease), border-color .2s var(--ease),
               color .2s var(--ease);
@@ -159,13 +245,15 @@ body.show-status .status__dot { background: #ffd9d9; }
 }
 body.show-status .status__toggle:hover { color: var(--danger-ink); }
 
-/* --------------------------------------------------------------------------
-   UTILITY BAR
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   6. UTILITY BAR
+   ========================================================================== */
 .utility {
   background: var(--band-tint);
   border-bottom: 1px solid var(--border);
 }
+
 .utility__inner {
   display: flex;
   justify-content: flex-end;
@@ -175,24 +263,35 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   padding-block: 8px;
   font-size: 13px;
 }
+
 .utility__item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  text-decoration: none;
+  border-radius: var(--r);
   color: var(--nav-ink);
   font-weight: 600;
-  border-radius: var(--r);
+  text-decoration: none;
   transition: color .18s var(--ease);
 }
 .utility__item:hover { color: var(--blue); }
-.utility__item--support { font-weight: 800; color: var(--navy); }
-.utility__item .icon { inline-size: 16px; block-size: 16px; flex: none; }
-.utility__sep { color: #c2ccdb; user-select: none; }
+.utility__item--support { color: var(--navy); font-weight: 800; }
 
-/* --------------------------------------------------------------------------
-   NAV
-   -------------------------------------------------------------------------- */
+.utility__icon {
+  inline-size: 16px;
+  block-size: 16px;
+  flex: none;
+}
+
+.utility__sep {
+  color: #c2ccdb;
+  user-select: none;
+}
+
+
+/* ==========================================================================
+   7. NAV SHELL
+   ========================================================================== */
 .nav {
   position: sticky;
   top: 0;
@@ -203,10 +302,6 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
 }
 .nav.is-stuck { box-shadow: var(--shadow-nav-stuck); }
 
-/* Above the drawer breakpoint there is no drawer, so there is nothing to
-   dim. The element only comes into being inside the media query below. */
-.nav-backdrop { display: none; }
-
 .nav__inner {
   display: flex;
   align-items: center;
@@ -215,6 +310,14 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   height: var(--nav-h);
 }
 
+/* Above the drawer breakpoint there is no drawer, so there is nothing to
+   dim. The element only comes into being inside the media query below. */
+.nav-backdrop { display: none; }
+
+
+/* ==========================================================================
+   8. LOGO
+   ========================================================================== */
 .logo {
   display: inline-flex;
   align-items: center;
@@ -222,18 +325,24 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   border-radius: var(--r);
   text-decoration: none;
 }
+
 /* Height-driven: the mark is 317×80, and the width follows so it can never be
    squashed. The home page sets it at 34px; the taller bar here carries 40. */
 .logo img {
-  block-size: 40px;
+  block-size: var(--logo-h);
   inline-size: auto;
 }
 
+
+/* ==========================================================================
+   9. MENU BAR
+   ========================================================================== */
 .menu {
   display: flex;
   align-items: center;
   gap: 2px;
 }
+
 .menu__item { position: relative; }
 
 .menu__link {
@@ -245,16 +354,16 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
      trigger and the panel it opened */
   height: var(--nav-h);
   padding-inline: 15px;
+  border: 0;
+  background: none;
+  color: var(--nav-ink);
   font: inherit;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -.005em;
-  color: var(--nav-ink);
   text-decoration: none;
-  background: none;
-  border: 0;
-  cursor: pointer;
   white-space: nowrap;
+  cursor: pointer;
   transition: color .18s var(--ease);
 }
 .menu__link:hover,
@@ -276,17 +385,24 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
 .menu__link:hover::after,
 .menu__item.is-open > .menu__link::after { transform: scaleX(1); }
 
+/* Stroke properties are inherited, so they reach the sprite symbol's path. */
 .menu__chev {
   inline-size: 10px;
   block-size: 10px;
   flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   transition: transform .25s var(--ease);
 }
 .menu__item.is-open > .menu__link .menu__chev { transform: rotate(180deg); }
 
-/* --------------------------------------------------------------------------
-   BUTTON — the brand's .btn, at nav scale
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   10. BUTTON — the brand's .btn, at nav scale
+   ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -294,8 +410,8 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   gap: 11px;
   height: 54px;
   padding-inline: 26px;
-  border-radius: var(--r);
   border: 1.5px solid transparent;
+  border-radius: var(--r);
   font: inherit;
   font-size: 16px;
   font-weight: 700;
@@ -310,30 +426,36 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
 .btn:active { transform: translateY(-1px); }
 
 .btn--quiet {
-  background: transparent;
   border-color: var(--border);
+  background: transparent;
   color: var(--navy);
   font-weight: 600;
 }
 /* Was a jump straight to navy, which read louder than it needed to. */
-.btn--quiet:hover { border-color: #c3d6ea; }
+.btn--quiet:hover { border-color: var(--border-hover); }
 
-.btn--nav { height: 44px; padding-inline: 22px; font-size: 15px; margin-left: 10px; }
+.btn--nav {
+  height: 44px;
+  margin-left: 10px;
+  padding-inline: 22px;
+  font-size: 15px;
+}
 .btn--nav::after { display: none; }
 
-/* --------------------------------------------------------------------------
-   DROPDOWN PANELS
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   11. DROPDOWN PANELS
+   ========================================================================== */
 .dropdown {
   position: absolute;
   top: 100%;
   left: -6px;
   min-inline-size: 420px;
   padding: 18px 10px 12px;
-  background: #fff;
   border: 1px solid var(--border);
   border-top: 2px solid var(--green);
   border-radius: var(--r);
+  background: #fff;
   box-shadow: var(--shadow-card);
   opacity: 0;
   visibility: hidden;
@@ -346,31 +468,31 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   visibility: visible;
   transform: translateY(0);
 }
+
 .dropdown--narrow { min-inline-size: 268px; }
 
 /* A panel belonging to a trigger at the end of the bar opens leftward. */
 .menu__item[data-align="end"] > .dropdown { left: auto; right: -6px; }
 
-/* A section heading is the brand's eyebrow: 12px, tracked out, green, with the
-   dot in front of it. */
+/* ---- section heading: the brand's eyebrow, with its green dot ---- */
 .dropdown__label {
   display: flex;
   align-items: center;
   gap: 9px;
   margin: 0 16px 8px;
+  color: var(--green-ink);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--green-ink);
 }
 .dropdown__label::before {
   content: '';
   inline-size: 8px;
   block-size: 8px;
+  flex: none;
   border-radius: 50%;
   background: var(--green);
-  flex: none;
 }
 /* the hairline finishes the rule the label starts */
 .dropdown__label::after {
@@ -380,15 +502,17 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   background: var(--border);
 }
 .dropdown__label--next { margin-top: 20px; }
+
 .dropdown__label-note {
+  flex: none;
+  color: var(--faint);
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: none;
-  color: var(--faint);
-  flex: none;
 }
 
-/* A grid, not a wrapping flex row: the label takes the free column, the badge
+/* ---- rows ----
+   A grid, not a wrapping flex row: the label takes the free column, the badge
    the fixed one, and the accent spans both underneath. As flex-wrap the badge
    dropped to a line of its own the moment the label ran long. */
 .dropdown__link {
@@ -399,10 +523,10 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   position: relative;
   padding: 10px 16px;
   border-radius: var(--r);
+  color: var(--nav-ink);
   font-size: 14.5px;
   font-weight: 600;
   line-height: 1.35;
-  color: var(--nav-ink);
   text-decoration: none;
   transition: background-color .16s var(--ease), color .16s var(--ease);
 }
@@ -434,23 +558,28 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   flex-wrap: wrap;
   gap: 4px 8px;
 }
-.dropdown__link > .dropdown__badge { grid-column: 2; }
 
 .dropdown__accent {
   grid-column: 1 / -1;
   margin-top: 3px;
+  color: var(--faint);
   font-size: 11.5px;
   font-weight: 500;
   line-height: 1.35;
-  color: var(--faint);
   transition: color .16s var(--ease);
 }
 .dropdown__link:hover .dropdown__accent,
 .dropdown__link:focus-visible .dropdown__accent { color: var(--blue); }
 
-.dropdown__ai { inline-size: 18px; block-size: 18px; flex: none; }
+.dropdown__ai {
+  inline-size: 18px;
+  block-size: 18px;
+  flex: none;
+  fill: var(--green);
+}
 
 .dropdown__badge {
+  grid-column: 2;
   align-self: center;
   flex: none;
   padding: 4px 9px;
@@ -465,9 +594,14 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
   white-space: nowrap;
 }
 
-/* ---- internal build markers, shown only by the status toggle ---- */
+
+/* ==========================================================================
+   12. BUILD MARKERS
+   Internal per-item status flags, revealed only by the review toggle.
+   ========================================================================== */
 .wf-note,
 .wf-progress { display: none; }
+
 body.show-status .wf-note,
 body.show-status .wf-progress {
   display: inline-block;
@@ -480,20 +614,23 @@ body.show-status .wf-progress {
   text-transform: uppercase;
   vertical-align: 1px;
 }
+
 body.show-status .wf-note {
-  color: var(--danger-ink);
+  border: 1px solid var(--danger-line);
   background: var(--danger-soft);
-  border: 1px solid #f0cfcf;
-}
-body.show-status .wf-progress {
-  color: var(--warn-ink);
-  background: var(--warn-soft);
-  border: 1px solid #ecd3a6;
+  color: var(--danger-ink);
 }
 
-/* --------------------------------------------------------------------------
-   HAMBURGER — hidden until the drawer breakpoint
-   -------------------------------------------------------------------------- */
+body.show-status .wf-progress {
+  border: 1px solid var(--warn-line);
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+}
+
+
+/* ==========================================================================
+   13. HAMBURGER — hidden until the drawer breakpoint
+   ========================================================================== */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -502,50 +639,55 @@ body.show-status .wf-progress {
   inline-size: 44px;
   block-size: 44px;
   padding: 10px;
-  background: none;
   border: 0;
   border-radius: var(--r);
+  background: none;
   cursor: pointer;
 }
+
 .hamburger span {
   display: block;
   block-size: 2.5px;
   inline-size: 100%;
-  background: var(--navy);
   border-radius: 2px;
+  background: var(--navy);
   transition: transform .28s var(--ease), opacity .2s var(--ease);
 }
 .hamburger.is-active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
 .hamburger.is-active span:nth-child(2) { opacity: 0; }
 .hamburger.is-active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
-/* --------------------------------------------------------------------------
-   DRAWER — under 1000px the menu becomes a panel with inline accordions
-   -------------------------------------------------------------------------- */
-@media (max-width: 1000px) {
-  :root { --nav-h: 72px; }
 
-  .logo img { block-size: 34px; }
+/* ==========================================================================
+   14. DRAWER — under 1000px the menu becomes a panel with inline accordions
+   ========================================================================== */
+@media (max-width: 1000px) {
+
+  :root {
+    --nav-h: 72px;
+    --logo-h: 34px;
+  }
 
   .hamburger { display: flex; }
 
+  /* ---- the panel ---- */
   .menu {
     position: fixed;
     top: 0;
     right: 0;
+    z-index: 200;
+    inline-size: var(--drawer-w);
     block-size: 100dvh;
-    inline-size: min(380px, 88vw);
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     padding: 84px 0 40px;
     background: #fff;
-    box-shadow: -12px 0 40px -12px rgba(20, 60, 102, .28);
+    box-shadow: var(--shadow-drawer);
     transform: translateX(100%);
     transition: transform .3s var(--ease);
     overflow-y: auto;
     overscroll-behavior: contain;
-    z-index: 200;
   }
   .menu.is-open { transform: translateX(0); }
 
@@ -553,50 +695,53 @@ body.show-status .wf-progress {
 
   .menu__link {
     inline-size: 100%;
-    justify-content: space-between;
     height: auto;
+    justify-content: space-between;
     padding: 15px 24px;
-    font-size: 17px;
     border-bottom: 1px solid var(--border-soft);
+    font-size: 17px;
   }
   .menu__link::after { display: none; }
+
   .menu__chev { inline-size: 14px; block-size: 14px; }
 
   .btn--nav {
-    margin: 22px 24px 0;
     inline-size: calc(100% - 48px);
+    margin: 22px 24px 0;
   }
 
-  /* panels open inline instead of floating */
+  /* ---- panels open inline instead of floating ---- */
   .dropdown,
   .dropdown--narrow,
   .menu__item[data-align="end"] > .dropdown {
+    display: none;
     position: static;
     min-inline-size: 0;
     inline-size: 100%;
     padding: 12px 14px 18px;
-    background: var(--band-tint);
     border: 0;
     border-bottom: 1px solid var(--border-soft);
     border-radius: 0;
+    background: var(--band-tint);
     box-shadow: none;
     opacity: 1;
     visibility: visible;
     transform: none;
-    display: none;
   }
   .menu__item.is-open > .dropdown { display: block; }
+
   .dropdown__label { margin-inline: 10px; }
 
+  /* ---- the scrim behind it ---- */
   .nav-backdrop {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(10, 44, 77, .42);
+    z-index: 150;
+    background: var(--scrim);
     opacity: 0;
     visibility: hidden;
     transition: opacity .28s var(--ease), visibility .28s;
-    z-index: 150;
   }
   .nav-backdrop.is-open { opacity: 1; visibility: visible; }
 
@@ -604,12 +749,13 @@ body.show-status .wf-progress {
 }
 
 @media (max-width: 560px) {
-  .utility__item span.utility__long { display: none; }
+  .utility__long { display: none; }
 }
 
-/* --------------------------------------------------------------------------
-   REDUCED MOTION
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   15. REDUCED MOTION
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
