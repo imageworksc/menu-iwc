@@ -13,6 +13,7 @@ mobile drawer. Built on the design system from the
 | `index.html` | The bar and its panels |
 | `styles.css` | Brand tokens and the nav components |
 | `script.js` | Menu, drawer, and review-chrome behaviour |
+| `assets/logo.png` | The mark, copied from `imageworksc/imageworks-home` — the live site is behind a Cloudflare challenge that refuses hotlinked images |
 
 No build step and no dependencies. Open `index.html` directly, or serve the
 folder with any static server.
