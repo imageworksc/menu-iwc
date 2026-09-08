@@ -251,38 +251,6 @@
   readStuck();
 
   /* ------------------------------------------------------------------------
-     PANEL PREVIEW
-     Each panel is cloned into the review grid, so the menu is written once.
-     ------------------------------------------------------------------------ */
-  var grid = document.getElementById('panelPreview');
-
-  if (grid) {
-    items.forEach(function (item) {
-      var panel = item.querySelector('.dropdown');
-      var clone = panel.cloneNode(true);
-
-      /* a clone must not answer to the same id, or carry the interactive
-         wiring of the original */
-      clone.removeAttribute('id');
-      clone.classList.remove('dropdown--narrow');
-      clone.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
-      clone.querySelectorAll('a').forEach(function (a) { a.setAttribute('tabindex', '-1'); });
-      clone.setAttribute('aria-hidden', 'true');
-
-      var card = document.createElement('div');
-      card.className = 'panel';
-
-      var name = document.createElement('p');
-      name.className = 'panel__name';
-      name.textContent = panel.getAttribute('data-panel-name') || '';
-
-      card.appendChild(name);
-      card.appendChild(clone);
-      grid.appendChild(card);
-    });
-  }
-
-  /* ------------------------------------------------------------------------
      REVIEW CHROME
      ------------------------------------------------------------------------ */
   var toggle = document.getElementById('statusToggle');

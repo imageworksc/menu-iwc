@@ -23,15 +23,9 @@
 </head>
 <body>
 
-<a class="skip-to-content" href="#main">Skip to content</a>
-
 <!-- Shared icon set, drawn once. -->
 <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
   <defs>
-    <symbol id="i-arrow" viewBox="0 0 24 24">
-      <line x1="5" y1="12" x2="19" y2="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-      <polyline points="12 5 19 12 12 19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    </symbol>
     <symbol id="i-chevron" viewBox="0 0 12 12">
       <path d="M2 4 L6 8 L10 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
@@ -94,7 +88,7 @@
           Web
           <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
         </button>
-        <div class="dropdown" id="panel-web" data-panel-name="Web">
+        <div class="dropdown" id="panel-web">
           <p class="dropdown__label">Website Design</p>
           <ul>
             <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Custom Website Design<span class="wf-note">Polish &amp; HTML ready</span></span><span class="dropdown__accent">Drupal / WordPress</span></a></li>
@@ -116,7 +110,7 @@
           Marketing
           <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
         </button>
-        <div class="dropdown" id="panel-marketing" data-panel-name="Marketing">
+        <div class="dropdown" id="panel-marketing">
           <p class="dropdown__label">AI, SEO &amp; Maps <span class="dropdown__label-note">(Modern search)</span></p>
           <ul>
             <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">SEO &amp; AI Search Setup<span class="wf-note">Polish &amp; HTML ready</span></span></a></li>
@@ -143,7 +137,7 @@
           Plans
           <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
         </button>
-        <div class="dropdown dropdown--narrow" id="panel-plans" data-panel-name="Plans">
+        <div class="dropdown dropdown--narrow" id="panel-plans">
           <ul>
             <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Marketing Plans<span class="wf-note">Polish &amp; HTML ready</span></span><span class="dropdown__accent">Local &amp; B2B</span></a></li>
           </ul>
@@ -160,7 +154,7 @@
           About
           <svg class="menu__chev" aria-hidden="true"><use href="#i-chevron"/></svg>
         </button>
-        <div class="dropdown dropdown--narrow" id="panel-about" data-panel-name="About">
+        <div class="dropdown dropdown--narrow" id="panel-about">
           <ul>
             <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">About Us</span></a></li>
             <li><a class="dropdown__link" href="#"><span class="dropdown__link-main">Customer's Lounge</span></a></li>
@@ -174,148 +168,6 @@
   </div>
 </nav>
 
-<main id="main">
-
-  <!-- 1 · HERO ------------------------------------------------------------ -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-wash" aria-hidden="true">
-      <span class="hero-wash__g"></span>
-      <span class="hero-wash__b"></span>
-    </div>
-    <div class="wrap hero-inner">
-      <div class="hero-main stack">
-        <p class="eyebrow">Navigation comp</p>
-        <h1 id="hero-title">The main menu, on the brand's own system</h1>
-        <p class="lead">Hover <strong>Web</strong>, <strong>Marketing</strong>, <strong>Plans</strong> or <strong>About</strong> to open a panel — or narrow the window past 1000px to see the same menu fold into its drawer. Everything below the nav is here to frame it.</p>
-        <div class="btn-row">
-          <a class="btn btn--solid" href="#panels">See every panel<svg width="15" height="15" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn--quiet" href="https://imageworksc.github.io/branding-page/">Branding page</a>
-        </div>
-      </div>
-
-      <!-- The system the nav is built from, shown rather than described: the
-           mark, the typeface, the palette, and the radius the brand commits
-           to. Same board the branding page hands over. -->
-      <div class="kit" aria-hidden="true">
-        <div class="kit-t kit-mark">
-          <p class="kit-label">Mark</p>
-          <span class="kit-disc">IW</span>
-        </div>
-
-        <div class="kit-t kit-type">
-          <p class="kit-label">Typeface</p>
-          <span class="kit-aa">Aa</span>
-          <p class="kit-name">Plus Jakarta Sans</p>
-        </div>
-
-        <div class="kit-t kit-pal">
-          <p class="kit-label">Palette</p>
-          <ul class="kit-swatches">
-            <li style="background:#143c66"></li>
-            <li style="background:#1266b5"></li>
-            <li style="background:#80c34a"></li>
-            <li style="background:#e3eaf3"></li>
-          </ul>
-        </div>
-
-        <div class="kit-t kit-shape">
-          <p class="kit-label">Corner</p>
-          <span class="kit-box"></span>
-          <p class="kit-name">2px, everywhere</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2 · ALL PANELS, FLAT ------------------------------------------------- -->
-  <section class="band band--tint" id="panels" aria-labelledby="panels-title">
-    <div class="wrap">
-      <div class="band__head">
-        <p class="eyebrow">Every panel at once</p>
-        <h2 class="sec-title" id="panels-title">Four panels, reviewed <em>side by side</em></h2>
-        <p class="lead">Each card below is the live panel from the nav above, cloned at load. There is one copy of the menu in the markup, so what you review here is what ships.</p>
-      </div>
-      <div class="panels" id="panelPreview"></div>
-    </div>
-  </section>
-
-  <!-- 3 · WHAT CHANGED ----------------------------------------------------- -->
-  <section class="band" aria-labelledby="specs-title">
-    <div class="wrap">
-      <div class="band__head">
-        <p class="eyebrow">This revision</p>
-        <h2 class="sec-title" id="specs-title">What moved, and <em>why</em></h2>
-      </div>
-      <div class="specs">
-        <div class="spec">
-          <p class="spec__k">Tokens</p>
-          <p class="spec__t">One design system</p>
-          <p class="spec__d">Colour, type scale, spacing, shadows and easing now come from the branding page's variables rather than a second set defined here.</p>
-        </div>
-        <div class="spec">
-          <p class="spec__k">Shape</p>
-          <p class="spec__t">Corners squared to 2px</p>
-          <p class="spec__d">The brand commits to a 2px radius. Panels, badges and buttons were between 4px and 12px, which read as a different product.</p>
-        </div>
-        <div class="spec">
-          <p class="spec__k">Keyboard</p>
-          <p class="spec__t">Reachable without a mouse</p>
-          <p class="spec__d">Arrow keys move along the bar and down a panel, Escape closes and returns focus to its trigger, and the drawer holds focus while it is open.</p>
-        </div>
-        <div class="spec">
-          <p class="spec__k">Sightline</p>
-          <p class="spec__t">Triggers fill the bar</p>
-          <p class="spec__d">Each trigger is the full 88px of nav height, so the pointer can no longer fall through a gap between a label and the panel it opened.</p>
-        </div>
-        <div class="spec">
-          <p class="spec__k">Position</p>
-          <p class="spec__t">The nav sticks</p>
-          <p class="spec__d">It stays at the top of the viewport and takes a shadow once the page has scrolled, instead of leaving with the first band.</p>
-        </div>
-        <div class="spec">
-          <p class="spec__k">Motion</p>
-          <p class="spec__t">Honours the system setting</p>
-          <p class="spec__d">Panel transitions, the hero washes and the button lift all stand down when the reader has asked for reduced motion.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 · CLOSE ------------------------------------------------------------ -->
-  <section class="band band--cta" aria-labelledby="cta-title">
-    <div class="wrap stack">
-      <p class="eyebrow">Next</p>
-      <h2 class="sec-title" id="cta-title">Ready to put this <em>on the site</em>?</h2>
-      <p class="lead">The markup, stylesheet and behaviour are three plain files with no build step and no dependencies — drop them into the theme as they are.</p>
-      <div class="btn-row">
-        <a class="btn btn--solid" href="mailto:sales@imageworkscreative.com">Email the team<svg width="18" height="18" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="btn btn--quiet" href="https://github.com/imageworksc/menu-iwc">View the source</a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="foot">
-  <div class="wrap foot__inner">
-    <div class="foot__brand">
-      <p class="foot__name">ImageWorks Creative</p>
-      <p>Design, copy and code in-house since 1997.</p>
-    </div>
-    <div class="foot__set">
-      <div>
-        <p class="foot__k">Offices</p>
-        <p>Ashburn, VA</p>
-        <p>St. Petersburg, FL</p>
-      </div>
-      <div>
-        <p class="foot__k">Talk to us</p>
-        <p><a href="tel:+17039287309">(703) 928-7309</a></p>
-        <p><a href="mailto:sales@imageworkscreative.com">sales@imageworkscreative.com</a></p>
-      </div>
-    </div>
-  </div>
-</footer>
 
 <script src="script.js" defer></script>
 </body>
