@@ -109,6 +109,9 @@ body {
   background: var(--band-tint);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* The grey flash a tap paints over a link on Android reads as a bug next to
+     the panel's own hover tint, which already answers the touch. */
+  -webkit-tap-highlight-color: transparent;
   /* clip, not hidden: hidden would make body a scroll container and break the
      sticky nav */
   overflow-x: clip;
@@ -337,6 +340,13 @@ body.show-status .status__toggle:hover { color: var(--danger-ink); }
 /* ==========================================================================
    9. MENU BAR
    ========================================================================== */
+
+/* Above the breakpoint the wrapper has no box of its own, so the list inside
+   it is laid out as a direct flex child of .nav__inner. It only becomes the
+   sliding panel in §14. */
+.drawer { display: contents; }
+.drawer__head { display: none; }
+
 .menu {
   display: flex;
   align-items: center;
@@ -670,8 +680,11 @@ body.show-status .wf-progress {
 
   .hamburger { display: flex; }
 
-  /* ---- the panel ---- */
-  .menu {
+  /* ---- the panel ----
+     The wrapper, not the list: the panel needs a header above the items, and
+     a <ul> can only hold <li>. */
+  .drawer {
+    display: flex;
     position: fixed;
     top: 0;
     right: 0;
@@ -679,9 +692,6 @@ body.show-status .wf-progress {
     inline-size: var(--drawer-w);
     block-size: 100dvh;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: 84px 0 40px;
     background: #fff;
     box-shadow: var(--shadow-drawer);
     transform: translateX(100%);
@@ -689,7 +699,57 @@ body.show-status .wf-progress {
     overflow-y: auto;
     overscroll-behavior: contain;
   }
-  .menu.is-open { transform: translateX(0); }
+  .drawer.is-open { transform: translateX(0); }
+
+  /* The panel covers the hamburger that opened it, so it carries its own way
+     out. Sticky, so the way out survives a scroll down a long menu. */
+  .drawer__head {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 10px 11px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff;
+  }
+
+  .drawer__logo {
+    block-size: 28px;
+    inline-size: auto;
+  }
+
+  .drawer__close {
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    flex: none;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r);
+    background: none;
+    color: var(--navy);
+    cursor: pointer;
+  }
+  .drawer__close svg {
+    inline-size: 18px;
+    block-size: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .menu {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    /* clears the home indicator on a phone held upright */
+    padding-block-end: max(40px, env(safe-area-inset-bottom));
+  }
 
   .menu__item { inline-size: 100%; }
 
@@ -731,6 +791,21 @@ body.show-status .wf-progress {
   .menu__item.is-open > .dropdown { display: block; }
 
   .dropdown__label { margin-inline: 10px; }
+
+  /* A finger is not a cursor: 10px of padding made a 40px row, which is under
+     the comfortable target size. 13px brings it to 46px. */
+  .dropdown__link { padding-block: 13px; }
+
+  /* ---- the bars above ---- */
+
+  /* Given room to be tapped, not just read. */
+  .utility__item { padding-block: 8px; }
+
+  /* Review chrome, not the product — it is compacted so it does not eat the
+     top of a phone screen. */
+  .status__inner { gap: 6px 12px; padding-block: 7px; }
+  .status__label { font-size: 10.5px; letter-spacing: .1em; }
+  .status__toggle { padding: 5px 10px; font-size: 10px; letter-spacing: .04em; }
 
   /* ---- the scrim behind it ---- */
   .nav-backdrop {

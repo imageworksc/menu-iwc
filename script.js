@@ -34,8 +34,10 @@
   const mq = window.matchMedia(DRAWER_AT);
 
   const nav = document.getElementById('nav');
+  const drawer = document.getElementById('drawer');
   const menu = document.getElementById('menu');
   const hamburger = document.querySelector('.hamburger');
+  const drawerClose = document.querySelector('.drawer__close');
   const backdrop = document.querySelector('.nav-backdrop');
 
   /* The items that own a panel. */
@@ -213,7 +215,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
 
-    if (menu.classList.contains('is-open')) {
+    if (isDrawerOpen()) {
       closeDrawer();
       return;
     }
@@ -230,13 +232,17 @@
      5. DRAWER
      ======================================================================== */
 
+  const isDrawerOpen = () => drawer.classList.contains('is-open');
+
+  /* The close button lives in the panel, so the trap is scoped to the panel
+     rather than to the list inside it. */
   const focusables = () =>
-    [...menu.querySelectorAll('a[href], button:not([disabled])')]
+    [...drawer.querySelectorAll('a[href], button:not([disabled])')]
       .filter((el) => el.offsetParent !== null);
 
   const openDrawer = () => {
     lastFocus = document.activeElement;
-    menu.classList.add('is-open');
+    drawer.classList.add('is-open');
     backdrop.classList.add('is-open');
     hamburger.classList.add('is-active');
     hamburger.setAttribute('aria-expanded', 'true');
@@ -247,7 +253,7 @@
   };
 
   const closeDrawer = () => {
-    menu.classList.remove('is-open');
+    drawer.classList.remove('is-open');
     backdrop.classList.remove('is-open');
     hamburger.classList.remove('is-active');
     hamburger.setAttribute('aria-expanded', 'false');
@@ -260,15 +266,16 @@
   };
 
   hamburger.addEventListener('click', () => {
-    if (menu.classList.contains('is-open')) closeDrawer();
+    if (isDrawerOpen()) closeDrawer();
     else openDrawer();
   });
 
+  drawerClose.addEventListener('click', closeDrawer);
   backdrop.addEventListener('click', closeDrawer);
 
   /* Tab stays inside the drawer while it is open. */
-  menu.addEventListener('keydown', (e) => {
-    if (e.key !== 'Tab' || !menu.classList.contains('is-open')) return;
+  drawer.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !isDrawerOpen()) return;
 
     const reachable = focusables();
     if (!reachable.length) return;
@@ -294,7 +301,7 @@
 
   /* Crossing the breakpoint resets both modes. */
   mq.addEventListener('change', () => {
-    if (menu.classList.contains('is-open')) closeDrawer();
+    if (isDrawerOpen()) closeDrawer();
     closeAll();
   });
 
